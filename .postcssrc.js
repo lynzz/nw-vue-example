@@ -3,7 +3,14 @@
 module.exports = {
   "plugins": [
     // to edit target browsers: use "browserlist" field in package.json
-    // "autoprefixer": {},
+    // require('postcss-import'),
+    require('postcss-cssnext')({
+      features: {
+        autoprefixer: false,
+        calc: false,
+        initial: false
+      }
+    }),
     require('postcss-salad')({
       "browsers": [
         "ie > 8",
@@ -23,5 +30,6 @@ module.exports = {
         }
       }
     })
+    
   ]
 }

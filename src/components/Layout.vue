@@ -1,5 +1,6 @@
 <template>
 	<div class="layout">
+    <topbar></topbar>
     <div class="layout-header">
         <el-menu theme="dark" :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect">
           <el-menu-item index="1">处理中心</el-menu-item>
@@ -80,22 +81,26 @@ export default {
 </script>
 
 <style scoped>
+  @import '../theme/variables.css';
+
   $side-width: 300px;
+  $topbar-height: 30px;
   $header-height: 60px;
+  $body-top: calc($topbar-height + $header-height);
 
 	.layout {
 		background: var(--menu-item-fill);
     
     &-header {
       position: fixed;
-      top: 0;
+      top: $topbar-height;
       width: 100%;
       z-index: 101;
     }
 
     &-body {
       position: absolute;
-      top: $header-height;
+      top: $body-top;
       bottom: 0;
       z-index: 100;
       width: 100%;
@@ -115,7 +120,7 @@ export default {
     &-assistant {
       position: fixed;
       left: 0;
-      top: $header-height;
+      top: $body-top;
       width: $side-width;
       height: 100%;
       z-index: 102;
