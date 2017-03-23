@@ -1,7 +1,8 @@
 <template>
   <div id="app">
-    <img src="./assets/logo.png">
-    <router-view></router-view>
+    <layout>
+      <router-view></router-view>
+    </layout>
   </div>
 </template>
 
@@ -12,6 +13,12 @@ export default {
 </script>
 
 <style>
+#app, html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  background: #f5f5f5;
+}
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;

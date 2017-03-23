@@ -8,9 +8,9 @@ module.exports = {
   main: "index.html",
   window: {
     height: 600,
-    width: 500,
+    width: 900,
     resizable: true,
-    toolbar: false,
+    toolbar: true,
     frame: false
   }
 }

@@ -32,6 +32,17 @@ module.exports = {
   },
   module: {
     rules: [
+      // {
+      //   test: /\.vue$/,
+      //   use: [
+      //     {
+      //       loader: 'vue-loader',
+      //       options: {
+      //         postcss: require('./.postcssrc.js').plugins
+      //       }
+      //     }
+      //   ]
+      // },
       {
         test: /\.(js|vue)$/,
         loader: 'eslint-loader',
