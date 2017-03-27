@@ -1,21 +1,25 @@
 <template>
 	<div class="layout">
-    <topbar></topbar>
-    <div class="layout-header">
-        <el-menu theme="dark" :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect">
-          <el-menu-item index="1">处理中心</el-menu-item>
-          <el-submenu index="2">
-            <template slot="title">我的工作台</template>
-            <el-menu-item index="2-1">选项1</el-menu-item>
-            <el-menu-item index="2-2">选项2</el-menu-item>
-            <el-menu-item index="2-3">选项3</el-menu-item>
-          </el-submenu>
-          <el-menu-item index="3"><a href="https://www.ele.me" target="_blank">订单管理</a></el-menu-item>
-        </el-menu>
+    <div class="layout__header">
+      <el-menu theme="dark" :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect">
+        <el-menu-item index="1">处理中心</el-menu-item>
+        <el-submenu index="2">
+          <template slot="title">我的工作台</template>
+          <el-menu-item index="2-1">选项1</el-menu-item>
+          <el-menu-item index="2-2">选项2</el-menu-item>
+          <el-menu-item index="2-3">选项3</el-menu-item>
+        </el-submenu>
+        <el-menu-item index="3"><a href="https://www.ele.me" target="_blank">订单管理</a></el-menu-item>
+      </el-menu>
+      <div class="layout__header-option">
+        <div class="layout__header-option--max" @click="handleMax"><span>+</span></div>
+        <div class="layout__header-option--close" @click="handleCloseWin"><span>x</span></div>
+        <div class="layout__header-option--min" @click="handleMin"><span>-</span></div>
+      </div>
     </div>
-    <div class="layout-body">
-      <div class="layout-assistant">
-        <el-menu default-active="2" class="el-menu-vertical-demo" @open="handleOpen" @close="handleClose">
+    <div class="layout__body">
+      <div class="layout__assistant">
+        <el-menu default-active="2" class="el-menu-vertical-demo" @open="handleOpenMenu" @close="handleCloseMenu">
           <el-submenu index="1">
             <template slot="title">导航一</template>
             <el-menu-item-group title="分组一">
@@ -34,10 +38,10 @@
           <el-menu-item index="3">导航三</el-menu-item>
         </el-menu>
       </div>
-      <div class="layout-panel">
-        <div class="layout-content">
-          <div class="layout-container">
-            <div class="layout-breadcrumb">
+      <div class="layout__panel">
+        <div class="layout__content">
+          <div class="layout__container">
+            <div class="layout__breadcrumb">
               <el-breadcrumb separator="/">
                 <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
                 <el-breadcrumb-item>活动管理</el-breadcrumb-item>
@@ -45,12 +49,12 @@
                 <el-breadcrumb-item>活动详情</el-breadcrumb-item>
               </el-breadcrumb>
             </div>
-            <div class="layout-inner">
+            <div class="layout__inner">
               <slot></slot>
             </div>
           </div>
         </div>
-        <div class="layout-footer">
+        <div class="layout__footer">
           2017@
         </div>
       </div>
@@ -59,6 +63,7 @@
 </template>
 
 <script>
+const win = nw.Window.get()
 export default {
   data () {
     return {
@@ -66,15 +71,35 @@ export default {
     }
   },
 
+  created () {
+
+  },
+
   methods: {
     handleSelect (key, keyPath) {
       console.log(key, keyPath)
     },
-    handleOpen (key, keyPath) {
+    handleOpenMenu (key, keyPath) {
       console.log(key, keyPath)
     },
-    handleClose (key, keyPath) {
+    handleCloseMenu (key, keyPath) {
       console.log(key, keyPath)
+    },
+
+    async handleCloseWin () {
+      try {
+        await this.$confirm('确定关闭窗口？', '提示')
+        win.close()
+      } catch (err) {
+
+      }
+    },
+    handleMin () {
+      win.minimize()
+    },
+
+    handleMax () {
+      win.maximize()
     }
   }
 }
@@ -84,21 +109,64 @@ export default {
   @import '../theme/variables.css';
 
   $side-width: 300px;
-  $topbar-height: 30px;
   $header-height: 60px;
-  $body-top: calc($topbar-height + $header-height);
+  $body-top: $header-height;
 
-	.layout {
+	@b layout {
 		background: var(--menu-item-fill);
     
-    &-header {
+    @e header {
       position: fixed;
-      top: $topbar-height;
+      top: 0;
       width: 100%;
       z-index: 101;
+
+      &-option {
+        position: absolute;
+        right: 0;
+        top: 5px;
+        width: 200px;
+        height: 30px;
+        display: flex;
+        flex-direction: row-reverse;
+
+        @nest &:hover {
+          span {
+            display: inline;
+          }
+        }
+
+        @nest &--close, &--min, &--max {
+          circle: 12px #ddd;
+          border: 1px sloid #D9D9D9;
+          margin: 0 5px;
+          text-align: center;
+          line-height: 12px;
+          font-size: 9px;
+          font-weight: 700;
+          @utils-vertical-center;
+          display: inline-block;
+          cursor: pointer;
+          span {
+            display: none;
+          }
+        }
+
+        &--close {
+          background-color: var(--color-danger);
+        }
+
+        &--min {
+          background-color: var(--color-warning);
+        }
+
+        &--max {
+          background-color: var(--color-success);
+        }
+      }
     }
 
-    &-body {
+    @e body {
       position: absolute;
       top: $body-top;
       bottom: 0;
@@ -106,7 +174,7 @@ export default {
       width: 100%;
     }
 
-    $__logo {
+    @e logo {
       width: 100px;
       height: 30px;
       background: #5b6270;
@@ -117,7 +185,7 @@ export default {
       left: 20px;
     }
 
-    &-assistant {
+    @e assistant {
       position: fixed;
       left: 0;
       top: $body-top;
@@ -127,14 +195,14 @@ export default {
       background: #eef1f6;
     }
     
-    &-breadcrumb {
+    @e breadcrumb {
       box-shadow: 0 1px 2px 0 rgba(0,0,0,.1);
       padding: 25px 15px;
       background-color: #fff;
       margin: -15px -15px 0;
     }
-    &-panel,
-    &-content {
+    &__panel,
+    &__content {
       position: absolute;
       top: 0;
       bottom: 0;
@@ -145,19 +213,19 @@ export default {
       transition: all .3s ease;
       width: auto;
     }
-    &-panel {
+    @e panel {
       left: $side-width;
     }
-    &-container {
+    @e container {
       padding: 15px;
     }
-    &-inner {
+    @e inner {
       padding: 10px;
       background: #fff;
       border-radius: 3px;
       margin-top: 10px;
     }
-    &-footer {
+    @e footer {
       text-align: center;
       padding: 10px 0 20px;
       color: #fff;

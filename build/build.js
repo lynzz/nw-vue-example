@@ -4,6 +4,7 @@ process.env.NODE_ENV = 'production'
 
 var ora = require('ora')
 var rm = require('rimraf')
+var shelljs = require('shelljs')
 var path = require('path')
 var chalk = require('chalk')
 var webpack = require('webpack')
@@ -54,23 +55,27 @@ rm(path.join(config.build.assetsRoot, config.build.assetsSubDirectory), err => {
 
       resolve('..')
       delete deps['..']
-
-      mkdir('-p', 'tmp/build/node_modules')
-      rm('-r', 'tmp/build/node_modules/*')
+      
+      shelljs.mkdir('-p', 'tmp/build/node_modules')
+      // shelljs.cp(path.join(__dirname, '../background.js'), 'tmp/build')
+      
+      shelljs.rm('-r', 'tmp/build/node_modules/*')
       Object.keys(deps).forEach(function (p) {
         console.log(`copy dependencies node_modules/${p}`)
-        cp('-r', `node_modules/${p}`, 'tmp/build/node_modules/')
+        shelljs.cp('-r', `node_modules/${p}`, 'tmp/build/node_modules/')
       })
       const nwconfig = require('./nwbuild').build
 
       const nw = new NwBuilder(nwconfig)
       nw.on('log', console.log)
       yield nw.build()
+      console.log(chalk.cyan('  Build complete.\n'))
+
     })
-    console.log(chalk.cyan('  Build complete.\n'))
-    console.log(chalk.yellow(
-      '  Tip: built files are meant to be served over an HTTP server.\n' +
-      '  Opening index.html over file:// won\'t work.\n'
-    ))
+    
+    // console.log(chalk.yellow(
+    //   '  Tip: built files are meant to be served over an HTTP server.\n' +
+    //   '  Opening index.html over file:// won\'t work.\n'
+    // ))
   })
 })

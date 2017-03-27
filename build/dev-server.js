@@ -1,5 +1,4 @@
 require('./check-versions')()
-require('shelljs/global')
 
 var config = require('../config')
 if (!process.env.NODE_ENV) {
@@ -8,6 +7,7 @@ if (!process.env.NODE_ENV) {
 
 var opn = require('opn')
 var path = require('path')
+var shelljs = require('shelljs')
 var express = require('express')
 var webpack = require('webpack')
 var proxyMiddleware = require('http-proxy-middleware')
@@ -92,11 +92,12 @@ module.exports = app.listen(port, function (err) {
     console.log(err)
     return
   }
-  var uri = 'http://localhost:' + port
-  console.log('Listening at ' + uri + '\n')
+  // var uri = 'http://localhost:' + port
+  // console.log('Listening at ' + uri + '\n')
 
   co(function* () {
-    mkdir('-p', 'tmp/dev/')
+    shelljs.mkdir('-p', 'tmp/dev/')
+    shelljs.cp('background.js', 'tmp/dev')
     yield fs.writeFile(
       'tmp/dev/package.json',
       JSON.stringify(_.merge(_.clone(manifest), {
